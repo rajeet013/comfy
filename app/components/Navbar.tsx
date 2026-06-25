@@ -39,16 +39,11 @@ const Navbar = () => {
     setIsCartOpen(false);
   };
 
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
-  );
+  const totalPrice = cartItems
+    .reduce((acc, item) => acc + item.price * item.quantity, 0)
+    .toFixed(2);
   const totalItemsCount = cartItems.reduce(
     (acc, item) => acc + item.quantity,
-    0,
-  );
-  const individualItemsCount = cartItems.reduce(
-    (acc, { quantity }) => acc + quantity,
     0,
   );
 
@@ -71,7 +66,7 @@ const Navbar = () => {
         <button onClick={openCart}>
           <div className="relative">
             <ShoppingCartIcon className="hover:cursor-pointer" />
-            <p className="absolute -inset-y-2 left-4 bg-orange-400 py-3/4 px-1 text-white h-3/4">
+            <p className="flex items-center justify-center absolute -inset-y-2 left-4 bg-orange-400 rounded-md py-3/4 px-1 text-white h-3/4">
               {totalItemsCount}
             </p>
           </div>
@@ -98,13 +93,13 @@ const Navbar = () => {
                   {cartItems.map((item, id) => (
                     <div
                       key={id}
-                      className="flex items-center justify-between mb-3"
+                      className="flex w-full items-center justify-between mb-3"
                     >
                       <div className="flex">
                         <Image
                           src={item.Image}
                           alt="image"
-                          width={100}
+                          width={70}
                           height={80}
                         />
                         <div className="ml-5">
@@ -143,10 +138,11 @@ const Navbar = () => {
 
                             window.dispatchEvent(new Event("storage-update"));
                           }}
+                          className="hover:cursor-pointer"
                         >
                           <ChevronUp className="text-orange-400" />
                         </button>
-                        <p>{individualItemsCount}</p>
+                        <p>{item.quantity}</p>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -165,7 +161,7 @@ const Navbar = () => {
                               if (existingItem.quantity <= 0) {
                                 const itemIndex =
                                   currentCart.indexOf(existingItem);
-                                currentCart.splice(itemIndex, 1);
+                                currentCart.splice(itemIndex);
                               }
                             }
 
@@ -176,6 +172,7 @@ const Navbar = () => {
 
                             window.dispatchEvent(new Event("storage-update"));
                           }}
+                          className="hover:cursor-pointer"
                         >
                           <ChevronDown className="text-orange-400" />
                         </button>
@@ -187,7 +184,7 @@ const Navbar = () => {
                   </p>
                   <button
                     onClick={clearCart}
-                    className="bg-orange-400 w-50 p-4 hover:bg-white/60 hover:text-orange-400 hover:cursor-pointer hover:border hover:border-orange-400"
+                    className="bg-orange-400 h-15 w-50 p-4 hover:bg-white/60 hover:text-orange-400 hover:cursor-pointer hover:border hover:border-orange-400"
                   >
                     <p className="text-xl uppercase">Clear Cart</p>
                   </button>

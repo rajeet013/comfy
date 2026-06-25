@@ -5,7 +5,7 @@ const Header = () => {
         <h1 className="text-[50px] uppercase font-bold text-center w-screen">
           Furniture Collection
         </h1>
-        <button className="bg-[#f09d51] px-12 py-4 hover:bg-transparent hover:text-orange-400 hover:cursor-pointer hover:border hover:border-orange-400">
+        <button className="bg-[#f09d51] px-12 py-4 hover:bg-transparent hover:text-orange-400 hover:cursor-pointer  hover:border-orange-400">
           <p className="text-md uppercase">Shop Now</p>
         </button>
       </div>

@@ -40,7 +40,29 @@ const Cards = () => {
             />
             <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-50"></div>
             <div className="absolute inset-x-0 bottom-4 flex justify-end opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-              <button className="flex items-center justify-center gap-2 w-1/2 uppercase bg-orange-400 text-black p-2 shadow-lg transform transition-all hover:text-white hover:cursor-pointer text-sm font-semibold">
+              <button
+                onClick={() => {
+                  const currentCart = JSON.parse(
+                    localStorage.getItem("cart") || "[]",
+                  );
+
+                  const existingItem = currentCart.find(
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (i: any) => i.id === item.id,
+                  );
+
+                  if (existingItem) {
+                    existingItem.quantity += 1;
+                  } else {
+                    currentCart.push({ ...item, quantity: 1 });
+                  }
+
+                  localStorage.setItem("cart", JSON.stringify(currentCart));
+
+                  window.dispatchEvent(new Event("storage-update"));
+                }}
+                className="flex items-center justify-center gap-2 w-1/2 uppercase bg-orange-400 text-black p-2 shadow-lg transform transition-all hover:text-white hover:cursor-pointer text-sm font-semibold"
+              >
                 <ShoppingCartIcon size={15} /> Add to Cart
               </button>
             </div>

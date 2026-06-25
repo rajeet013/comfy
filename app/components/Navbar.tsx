@@ -1,11 +1,7 @@
 "use client";
-import {
-  ChevronDown,
-  ChevronUp,
-  MenuIcon,
-  ShoppingCartIcon,
-  X,
-} from "lucide-react";
+import { faCartPlus } from "@fortawesome/free-solid-svg-icons/faCartPlus";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ChevronDown, ChevronUp, MenuIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -59,14 +55,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex items-center justify-center sticky top-0 p-4 bg-stone-200 z-40">
+    <nav className="flex items-center justify-center sticky top-0 p-4 bg-[#E7E2DD] z-40">
       <div className="flex items-center justify-between max-w-6xl w-full">
-        <MenuIcon />
+        <MenuIcon size={25} />
         <Image src="./logo.svg" alt="logo" width={200} height={200} />
         <button onClick={openCart}>
-          <div className="relative">
-            <ShoppingCartIcon className="hover:cursor-pointer" />
-            <p className="flex items-center justify-center absolute -inset-y-2 left-4 bg-orange-400 rounded-md py-3/4 px-1 text-white h-3/4">
+          <div className="relative hover:cursor-pointer">
+            <FontAwesomeIcon icon={faCartPlus} size="xl" />
+            <p className="flex items-center justify-center absolute -inset-y-2 left-4 bg-[#F09D51] rounded-md py-3/4 px-1 text-white h-3/4">
               {totalItemsCount}
             </p>
           </div>

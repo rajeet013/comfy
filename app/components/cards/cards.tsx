@@ -5,12 +5,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Cards = () => {
-  const [dimensions, setDimensions] = useState({ width: 300, height: 300 });
+  const [dimensions, setDimensions] = useState({ width: 350, height: 350 });
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 604) {
-        setDimensions({ width: 300, height: 300 });
+        setDimensions({ width: 350, height: 350 });
       } else {
         setDimensions({ width: 400, height: 400 });
       }

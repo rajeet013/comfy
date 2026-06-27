@@ -1,63 +1,28 @@
 "use client";
+import { useCart } from "@/app/hooks/useCart";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons/faCartPlus";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronDown, ChevronUp, MenuIcon, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-
-interface CartItem {
-  id: number;
-  Image: string;
-  title: string;
-  price: number;
-  quantity: number;
-}
 
 const Navbar = () => {
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  useEffect(() => {
-    const updateCart = () => {
-      const savedCart = localStorage.getItem("cart");
-      if (savedCart) setCartItems(JSON.parse(savedCart));
-    };
-
-    updateCart();
-
-    window.addEventListener("storage-update", updateCart);
-    return () => window.removeEventListener("storage-update", updateCart);
-  }, []);
-
-  const openCart = () => setIsCartOpen(true);
-  const closeCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsCartOpen(false);
-  };
-
-  const totalPrice = cartItems
-    .reduce((acc, item) => acc + item.price * item.quantity, 0)
-    .toFixed(2);
-  const totalItemsCount = cartItems.reduce(
-    (acc, item) => acc + item.quantity,
-    0,
-  );
-
-  const clearCart = () => {
-    localStorage.removeItem("cart");
-    setCartItems([]);
-  };
-
-  const removeOneItem = (id: number) => {
-    const updated = cartItems.filter((item) => item.id !== id);
-    localStorage.setItem("cart", JSON.stringify(updated));
-    setCartItems(updated);
-  };
+  const {
+    cartItems,
+    isCartOpen,
+    openCart,
+    closeCart,
+    clearCart,
+    removeOneItem,
+    incrementItem,
+    decrementItem,
+    totalPrice,
+    totalItemsCount,
+  } = useCart();
 
   return (
     <nav className="flex items-center justify-center sticky top-0 p-4 bg-[#E7E2DD] z-40">
-      <div className="flex items-center justify-between max-w-6xl w-full">
-        <MenuIcon size={25} />
+      <div className="flex items-center justify-between max-w-285 w-full">
+        <MenuIcon size={28} />
         <Image src="./logo.svg" alt="logo" width={200} height={200} />
         <button onClick={openCart}>
           <div className="relative hover:cursor-pointer">
@@ -70,126 +35,84 @@ const Navbar = () => {
 
         {isCartOpen && (
           <div
-            className={`fixed inset-0 right-0 z-100 bg-opacity-50 bg-orange-300/40 flex justify-end transition duration-500 ease-in-out overflow-y-auto`}
+            className="fixed inset-0 z-50 bg-orange-300/40 flex justify-end overflow-y-auto"
             onClick={closeCart}
-            suppressHydrationWarning
           >
-            <div className="p-4 max-w-lg w-full bg-stone-200">
+            <div
+              className="p-4 max-w-138 w-full bg-stone-200"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="flex">
                 <button
                   onClick={closeCart}
-                  className="p-2 bg-black text-white hover:cursor-pointer rounded-md"
+                  className="mt-2 p-1.5 bg-black text-white hover:cursor-pointer rounded-md font-bold"
                 >
                   <X size={15} />
                 </button>
               </div>
+
               {cartItems.length > 0 ? (
                 <div className="flex flex-col gap-6 items-center justify-center">
-                  <p className="text-2xl font-bold">Your Cart</p>
-                  {cartItems.map((item, id) => (
+                  <p className="text-2xl font-bold text-[#222222]">Your Cart</p>
+                  {cartItems.map((item) => (
                     <div
-                      key={id}
-                      className="flex w-full items-center justify-between mb-3"
+                      key={item.id}
+                      className="flex w-full items-center justify-between m-3"
                     >
                       <div className="flex">
                         <Image
                           src={item.Image}
                           alt="image"
                           width={70}
-                          height={80}
+                          height={90}
+                          className="h-18 w-19"
                         />
                         <div className="ml-5">
-                          <p className="text-sm">{item.title}</p>
-                          <p className="text-sm text-gray-700">
+                          <p className="text-sm font-semibold leading-relaxed">{item.title}</p>
+                          <p className="text-sm text-gray-700 mt-px font-semibold leading-relaxed">
                             TK {item.price}
                           </p>
-                          <button onClick={() => removeOneItem(item.id)}>
+                          <button
+                            className="mt-0.5 text-gray-600 hover:cursor-pointer"
+                            onClick={() => { removeOneItem(item.id); closeCart(); }}
+                          >
                             remove
                           </button>
                         </div>
                       </div>
                       <div className="flex flex-col items-center justify-center">
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const currentCart = JSON.parse(
-                              localStorage.getItem("cart") || "[]",
-                            );
-
-                            const existingItem = currentCart.find(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              (i: any) => i.id === item.id,
-                            );
-
-                            if (existingItem) {
-                              existingItem.quantity += 1;
-                            } else {
-                              currentCart.push({ ...item, quantity: 1 });
-                            }
-
-                            localStorage.setItem(
-                              "cart",
-                              JSON.stringify(currentCart),
-                            );
-
-                            window.dispatchEvent(new Event("storage-update"));
-                          }}
+                          onClick={() => incrementItem(item.id)}
                           className="hover:cursor-pointer"
                         >
-                          <ChevronUp className="text-orange-400" />
+                          <ChevronUp className="text-[#F09D51]" />
                         </button>
                         <p>{item.quantity}</p>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const currentCart = JSON.parse(
-                              localStorage.getItem("cart") || "[]",
-                            );
-
-                            const existingItem = currentCart.find(
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              (i: any) => i.id === item.id,
-                            );
-
-                            if (existingItem) {
-                              existingItem.quantity -= 1;
-
-                              if (existingItem.quantity <= 0) {
-                                const itemIndex =
-                                  currentCart.indexOf(existingItem);
-                                currentCart.splice(itemIndex);
-                              }
-                            }
-
-                            localStorage.setItem(
-                              "cart",
-                              JSON.stringify(currentCart),
-                            );
-
-                            window.dispatchEvent(new Event("storage-update"));
-                          }}
+                          onClick={() => decrementItem(item.id)}
                           className="hover:cursor-pointer"
                         >
-                          <ChevronDown className="text-orange-400" />
+                          <ChevronDown className="text-[#F09D51]" />
                         </button>
                       </div>
                     </div>
                   ))}
-                  <p className="text-xl font-bold">
-                    Your Total: TK {totalPrice}
-                  </p>
+                  <p className="text-xl font-bold">Your Total: TK {totalPrice}</p>
                   <button
                     onClick={clearCart}
-                    className="bg-orange-400 h-15 w-50 p-4 hover:bg-white/60 hover:text-orange-400 hover:cursor-pointer hover:border hover:border-orange-400"
+                    className="mb-4 bg-[#f09d51] h-13 w-50 flex items-center justify-center hover:bg-transparent hover:text-orange-400 hover:cursor-pointer  hover:border-orange-400 hover:border"
                   >
                     <p className="text-xl uppercase">Clear Cart</p>
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col gap-6 items-center justify-center">
+                <div className="flex flex-col gap-6 items-center justify-center mt-6">
                   <p className="text-2xl font-bold">Your Cart</p>
                   <p className="text-xl font-bold">Your Total: TK 0</p>
-                  <button className="bg-orange-400 w-50 p-4 hover:bg-white/60 hover:text-orange-400 hover:cursor-pointer hover:border hover:border-orange-400">
+                  <button
+                    onClick={() => { clearCart(); closeCart(); }}
+                    className="bg-[#f09d51] h-13 w-50 flex items-center justify-center hover:bg-transparent hover:text-orange-400 hover:cursor-pointer  hover:border-orange-400 hover:border"
+                  >
                     <p className="text-xl uppercase">Clear Cart</p>
                   </button>
                 </div>

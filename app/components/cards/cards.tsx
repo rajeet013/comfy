@@ -1,76 +1,74 @@
 "use client";
+import { useCartIds } from "@/app/hooks/useCartIds";
+import { useWindowSize } from "@/app/hooks/useWindowSize";
 import { products } from "@/app/constants/products";
-import { ShoppingCartIcon } from "lucide-react";
+import { CheckIcon, ShoppingCartIcon } from "lucide-react";
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Cards = () => {
-  const [dimensions, setDimensions] = useState({ width: 350, height: 350 });
+  const cartIds = useCartIds();
+  const dimensions = useWindowSize();
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 604) {
-        setDimensions({ width: 350, height: 350 });
-      } else {
-        setDimensions({ width: 400, height: 400 });
-      }
-    };
+  const handleAddToCart = (item: (typeof products)[0]) => {
+    if (cartIds.includes(item.id)) return;
 
-    handleResize(); // Run on mount to set initial size
+    const currentCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existingItem = currentCart.find((i: { id: number }) => i.id === item.id);
 
-    window.addEventListener("resize", handleResize); // Set up event listener
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      currentCart.push({ ...item, quantity: 1 });
+    }
 
-    return () => window.removeEventListener("resize", handleResize); // Return a cleanup function
-  }, []);
+    localStorage.setItem("cart", JSON.stringify(currentCart));
+    window.dispatchEvent(new Event("storage-update"));
+    window.dispatchEvent(new Event("open-cart"));
+  };
 
   return (
     <div className="grid grid-cols-1 min-[605px]:grid-cols-2 min-[920px]:grid-cols-3 min-[1236px]:grid-cols-4 gap-5">
-      {products.map((item, id) => (
-        <div
-          key={id}
-          className="flex flex-col items-center justify-center gap-3"
-        >
-          <div className="group relative overflow-hidden">
-            <Image
-              src={item.Image}
-              alt="product"
-              width={dimensions.width}
-              height={dimensions.height}
-              className="h-48"
-            />
-            <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-50"></div>
-            <div className="absolute inset-x-0 bottom-4 flex justify-end opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-              <button
-                onClick={() => {
-                  const currentCart = JSON.parse(
-                    localStorage.getItem("cart") || "[]",
-                  );
+      {products.map((item) => {
+        const inCart = cartIds.includes(item.id);
 
-                  const existingItem = currentCart.find(
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (i: any) => i.id === item.id,
-                  );
-
-                  if (existingItem) {
-                    existingItem.quantity += 1;
-                  } else {
-                    currentCart.push({ ...item, quantity: 1 });
-                  }
-
-                  localStorage.setItem("cart", JSON.stringify(currentCart));
-
-                  window.dispatchEvent(new Event("storage-update"));
-                }}
-                className="flex items-center justify-center gap-2 w-1/2 uppercase bg-orange-400 text-black p-2 shadow-lg transform transition-all hover:text-white hover:cursor-pointer text-sm font-semibold"
-              >
-                <ShoppingCartIcon size={15} /> Add to Cart
-              </button>
+        return (
+          <div
+            key={item.id}
+            className="flex flex-col items-center justify-center gap-3"
+          >
+            <div className="group relative overflow-hidden">
+              <Image
+                src={item.Image}
+                alt="product"
+                width={dimensions.width}
+                height={dimensions.height}
+                className="h-50 w-70"
+              />
+              <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-50" />
+              <div className="absolute inset-x-0 bottom-6 flex justify-end opacity-0 transition-all duration-600 translate-x-full group-hover:translate-x-0 group-hover:opacity-100">
+                <button
+                  onClick={() => handleAddToCart(item)}
+                  className={`flex items-center justify-center gap-2 uppercase p-2 shadow-lg text-sm font-semibold transition-all hover:cursor-pointer
+                    ${inCart
+                      ? "w-1/3 bg-[#F09D51] text-black hover:text-white"
+                      : "w-1/2 bg-[#F09D51] text-black hover:text-white"
+                    }`}
+                >
+                  {inCart ? (
+                    <>In Cart</>
+                  ) : (
+                    <><FontAwesomeIcon icon={faShoppingCart} size="sm" /> Add to Cart</>
+                  )}
+                </button>
+              </div>
             </div>
+            <p className="text-xl">{item.title}</p>
+            <p className="text-orange-400">TK {item.price}</p>
           </div>
-          <p className="text-xl">{item.title}</p>
-          <p className="text-orange-400">TK {item.price}</p>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

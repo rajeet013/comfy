@@ -39,7 +39,7 @@ const Navbar = () => {
             onClick={closeCart}
           >
             <div
-              className="p-4 max-w-138 w-full h-full bg-[#f2ede8] animate-[slideIn_0.4s_ease-in-out_forwards]"
+              className="p-4 max-w-138 w-full h-full bg-[#f2ede8] animate-slide-in"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex">

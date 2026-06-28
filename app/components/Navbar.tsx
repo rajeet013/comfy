@@ -21,7 +21,7 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center justify-center sticky top-0 p-4 bg-[#E7E2DD] z-40">
-      <div className="flex items-center justify-between max-w-285 w-full">
+      <div className="flex items-center justify-between max-w-282 w-full">
         <MenuIcon size={28} />
         <Image src="./logo.svg" alt="logo" width={200} height={200} />
         <button onClick={openCart}>
@@ -35,11 +35,11 @@ const Navbar = () => {
 
         {isCartOpen && (
           <div
-            className="fixed inset-0 z-50 bg-orange-300/40 flex justify-end overflow-y-auto"
+            className="fixed inset-0 z-50 bg-orange-300/40 flex justify-end overflow-auto"
             onClick={closeCart}
           >
             <div
-              className="p-4 max-w-138 w-full bg-stone-200"
+              className="p-4 max-w-138 w-full h-full bg-[#f2ede8] animate-[slideIn_0.4s_ease-in-out_forwards]"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex">
@@ -52,12 +52,12 @@ const Navbar = () => {
               </div>
 
               {cartItems.length > 0 ? (
-                <div className="flex flex-col gap-6 items-center justify-center">
-                  <p className="text-2xl font-bold text-[#222222]">Your Cart</p>
+                <div className="flex flex-col gap-3 items-center justify-center mt-3">
+                  <p className="text-2xl font-bold text-[#222222] mb-3">Your Cart</p>
                   {cartItems.map((item) => (
                     <div
                       key={item.id}
-                      className="flex w-full items-center justify-between m-3"
+                      className="flex w-full items-center justify-between m-2"
                     >
                       <div className="flex">
                         <Image
@@ -65,10 +65,10 @@ const Navbar = () => {
                           alt="image"
                           width={70}
                           height={90}
-                          className="h-18 w-19"
+                          className="h-19 w-19"
                         />
                         <div className="ml-5">
-                          <p className="text-sm font-semibold leading-relaxed">{item.title}</p>
+                          <p className="text-sm font-semibold leading-relaxed text-md">{item.title}</p>
                           <p className="text-sm text-gray-700 mt-px font-semibold leading-relaxed">
                             TK {item.price}
                           </p>

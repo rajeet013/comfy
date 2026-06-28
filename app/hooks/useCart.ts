@@ -61,7 +61,7 @@ export const useCart = () => {
       existingItem.quantity -= 1;
       if (existingItem.quantity <= 0) {
         const index = currentCart.findIndex((i: CartItem) => i.id === id);
-        currentCart.splice(index, 1); // ← fixed splice bug: now removes only 1 item
+        currentCart.splice(index, 1);
       }
     }
     localStorage.setItem("cart", JSON.stringify(currentCart));
@@ -72,7 +72,10 @@ export const useCart = () => {
     .reduce((acc, item) => acc + item.price * item.quantity, 0)
     .toFixed(2);
 
-  const totalItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalItemsCount = cartItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
 
   return {
     cartItems,

@@ -28,7 +28,7 @@ const Navbar = () => {
         <button onClick={openCart}>
           <div className="relative hover:cursor-pointer">
             <FontAwesomeIcon icon={faCartPlus} size="xl" />
-            <p className="flex items-center justify-center absolute -inset-y-2 left-4 bg-[#F09D51] rounded-md py-3/4 px-1 text-white h-3/4">
+            <p className="flex absolute -inset-y-2 left-4 bg-[#F09D51] rounded-md py-0.125 px-1.5 text-white h-3/4">
               {totalItemsCount}
             </p>
           </div>

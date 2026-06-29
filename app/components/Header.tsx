@@ -7,7 +7,7 @@ const Header = () => {
         <h1 className="text-[50px] uppercase font-bold text-center w-screen">
           Furniture Collection
         </h1>
-        <Button title="Shop Now" />
+        <Button title="Shop Now" color="#F09D51" />
       </div>
     </header>
   );

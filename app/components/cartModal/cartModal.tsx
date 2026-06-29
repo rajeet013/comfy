@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 interface CartItem {
@@ -110,9 +111,15 @@ const CartModal = ({
             <p className="text-xl font-semibold">
               Your Total : TK {totalPrice}
             </p>
+            <Link
+              href="/checkout"
+              className="mb-4 bg-[#A2DA48] h-13 w-50 flex items-center justify-center hover:bg-transparent hover:text-[#A2DA48] hover:cursor-pointer hover:border-[#A2DA48] hover:border"
+            >
+              <p className="text-xl uppercase">Checkout</p>
+            </Link>
             <button
               onClick={onClearCart}
-              className="mb-4 bg-[#f09d51] h-13 w-50 flex items-center justify-center hover:bg-transparent hover:text-orange-400 hover:cursor-pointer hover:border-orange-400 hover:border"
+              className="mb-4 bg-[#f09d51] h-13 w-50 flex items-center justify-center hover:bg-transparent hover:text-[#f09d51] hover:cursor-pointer hover:border-[#f09d51] hover:border"
             >
               <p className="text-xl uppercase">Clear Cart</p>
             </button>
@@ -121,15 +128,7 @@ const CartModal = ({
           <div className="flex flex-col gap-3 items-center justify-center mt-6">
             <p className="text-2xl font-bold mb-4">Your Cart</p>
             <p className="text-xl font-bold">Your Total : TK 0</p>
-            <button
-              onClick={() => {
-                onClearCart();
-                onClose();
-              }}
-              className="bg-[#f09d51] h-13 w-50 flex items-center justify-center hover:bg-transparent hover:text-orange-400 hover:cursor-pointer hover:border-orange-400 hover:border"
-            >
-              <p className="text-xl uppercase">Clear Cart</p>
-            </button>
+            <p className="text-xl font-bold">No Items In Card</p>
           </div>
         )}
       </div>
